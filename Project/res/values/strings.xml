@@ -4,5 +4,6 @@
     <string name="app_name">Ysera</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="tv1">Year</string>
 
 </resources>
