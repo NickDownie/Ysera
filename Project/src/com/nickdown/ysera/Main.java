@@ -1,6 +1,7 @@
 package com.nickdown.ysera;
 
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -17,38 +18,22 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class Main extends Activity {
-	
-	public Button bt_calc;
-	public EditText et_day;
-	public EditText et_month;
-	public EditText et_year;
-	public TextView tv_result;
+
+	public static Button bt_calc;
+	public static EditText et_day;
+	public static EditText et_month;
+	public static EditText et_year;
+	public static TextView tv_result;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		bt_calc = (Button)findViewById(R.id.btncalc);
-		et_day = (EditText)findViewById(R.id.et_day);
-		et_month = (EditText)findViewById(R.id.et_month);
-		et_year = (EditText)findViewById(R.id.et_year);
-		tv_result = (TextView)findViewById(R.id.tv_result);
 
-		if(bt_calc == null){
+		if (bt_calc == null) {
 			Log.e("ERRRROOR", "Button is null");
 		}
-		
-		bt_calc.setOnClickListener(new OnClickListener(){
 
-			@Override
-			public void onClick(View v) {
-				updateCountdown();
-			}
-			
-		});
-				
-		
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
@@ -88,40 +73,66 @@ public class Main extends Activity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_main, container,
 					false);
+
+			bt_calc = (Button) rootView.findViewById(R.id.bt_calc);
+			et_day = (EditText) rootView.findViewById(R.id.et_day);
+			et_month = (EditText) rootView.findViewById(R.id.et_month);
+			et_year = (EditText) rootView.findViewById(R.id.et_year);
+			tv_result = (TextView) rootView.findViewById(R.id.tv_result);
+
+			bt_calc.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					updateCountdown();
+				}
+
+			});
+
 			return rootView;
 		}
 	}
-	
-	private void updateCountdown(){
+
+	private static void updateCountdown() {
 		String day = et_day.getText().toString();
 		int d = Integer.parseInt(day);
-		
+
 		String month = et_month.getText().toString();
 		int m = Integer.parseInt(month);
-		
+
 		String year = et_year.getText().toString();
 		int y = Integer.parseInt(year);
-		
+
 		Calendar cal = Calendar.getInstance();
 		cal.set(y, m, d);
-		
+
 		long eventTime = cal.getTimeInMillis();
 
-		Calendar today = Calendar.getInstance();
-		long todayInMillis = today.getTimeInMillis();
+		Calendar rightNow = Calendar.getInstance();
+
+		int todayInMillis = rightNow.get(Calendar.MILLISECOND);
+		/*long offset = rightNow.get(Calendar.ZONE_OFFSET)
+				+ rightNow.get(Calendar.DST_OFFSET);
+
+		long sinceMidnight = (rightNow.getTimeInMillis() + offset)
+				% (24 * 60 * 60 * 1000);
+				*/
+
+		long diffInMilliSec = eventTime - todayInMillis;//rightNow.getTimeInMillis();
+		long diffInSec = TimeUnit.MILLISECONDS.toSeconds(diffInMilliSec);
+
+		int secs = (int) (diffInSec % 60);
+		diffInSec /=60;
+		int mins = (secs % 60);
+		diffInSec /= 60;
+		int hours = (mins % 24);
+		diffInSec /= 24;
+		int days = (int)diffInSec;
+
 		
-		long diff = eventTime - todayInMillis;
-		
-		int secs = (int) (diff/1000);
-		int mins = (secs/60);
-		int hours = (mins/60);
-		int days = (hours/24);
-		int weeks = (days/7);
-		
-		tv_result.setText("Days: " + days + ", Hours: " + hours + ", Minutes: " + mins + ", Seconds: " + secs);
-	
+		tv_result.setText("Days: " + days + ", Hours: " + hours + ", Minutes: "
+				+ mins + ", Seconds: " + secs);
+
 	}
-	
-	
 
 }

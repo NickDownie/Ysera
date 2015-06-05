@@ -23,7 +23,8 @@
             android:id="@+id/et_day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:inputType="number" />
 
     </LinearLayout>
     
@@ -44,7 +45,8 @@
             android:id="@+id/et_month"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1" 
+            android:inputType="number"/>
 
     </LinearLayout>
     
@@ -65,12 +67,13 @@
             android:id="@+id/et_year"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1" 
+            android:inputType="number"/>
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/btncalc"
+        android:id="@+id/bt_calc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Calculate" />
@@ -79,6 +82,6 @@
         android:id="@+id/tv_result"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="" />
 
 </LinearLayout>
