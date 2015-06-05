@@ -19,11 +19,17 @@ import android.widget.TextView;
 
 public class Main extends Activity {
 
+	public static final long MIN = 60;
+	public static final long HOUR = 60 * MIN;
+	public static final long DAY = 24*HOUR;
+	
+	
 	public static Button bt_calc;
 	public static EditText et_day;
 	public static EditText et_month;
 	public static EditText et_year;
 	public static TextView tv_result;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +100,9 @@ public class Main extends Activity {
 	}
 
 	private static void updateCountdown() {
+		/*
+		 * Getting inputs and parsing/setting the input to new variables variable
+		 */
 		String day = et_day.getText().toString();
 		int d = Integer.parseInt(day);
 
@@ -103,36 +112,45 @@ public class Main extends Activity {
 		String year = et_year.getText().toString();
 		int y = Integer.parseInt(year);
 
+		/*
+		 * Setting the future date for event and setting cal to yy/mm/dd
+		 */
 		Calendar cal = Calendar.getInstance();
-		cal.set(y, m, d);
-
+		cal.clear();
+		cal.set(y, m-1, d);
 		long eventTime = cal.getTimeInMillis();
-
+		
+		/*
+		 * Setting the current time to right now object, then converting it
+		 * to millis and setting it to todayInMillis
+		 */
 		Calendar rightNow = Calendar.getInstance();
+		long todayInMillis = rightNow.getTimeInMillis();
 
-		int todayInMillis = rightNow.get(Calendar.MILLISECOND);
-		/*long offset = rightNow.get(Calendar.ZONE_OFFSET)
-				+ rightNow.get(Calendar.DST_OFFSET);
-
-		long sinceMidnight = (rightNow.getTimeInMillis() + offset)
-				% (24 * 60 * 60 * 1000);
-				*/
-
+		/*
+		 * Calculating the difference between event/current time
+		 */
 		long diffInMilliSec = eventTime - todayInMillis;//rightNow.getTimeInMillis();
 		long diffInSec = TimeUnit.MILLISECONDS.toSeconds(diffInMilliSec);
 
-		int secs = (int) (diffInSec % 60);
-		diffInSec /=60;
-		int mins = (secs % 60);
-		diffInSec /= 60;
-		int hours = (mins % 24);
-		diffInSec /= 24;
-		int days = (int)diffInSec;
-
+		/*
+		 * Converting millis to ss/mm/hh/dd from the calculated difference
+		 */
+		int numDay = (int)(diffInSec / DAY);
+		diffInSec %= DAY;
+		int numHour = (int)(diffInSec/ HOUR);
+		diffInSec %= HOUR;
+		int numMin =(int)(diffInSec / MIN);
+		int numSec = (int)(diffInSec % MIN);
 		
-		tv_result.setText("Days: " + days + ", Hours: " + hours + ", Minutes: "
-				+ mins + ", Seconds: " + secs);
-
+		
+		
+		/*
+		 * Outputing the data
+		 */
+		tv_result.setText("Days: " + numDay + ", Hours: " + numHour + ", Minutes: "
+				+ numMin + ", Seconds: " + numSec);
+		//tv_result.setText(postTimeStamp);
 	}
 
 }
